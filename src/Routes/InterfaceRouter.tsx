@@ -3,7 +3,7 @@ export interface IPath {
   '/'?: undefined
   '/login': {}
   '/register': {}
-  '/employer': {}
+  '/product': {}
   '/candidate': {}
   '/news': {}
   '/setting-price': {}

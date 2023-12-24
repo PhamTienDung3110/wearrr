@@ -13,7 +13,7 @@ export const RouteContainer: IRouter[] = [
     isAuth: false
   },
   {
-    path: '/employer',
+    path: '/product',
     exact: true,
     element: Employer,
     isAuth: false
