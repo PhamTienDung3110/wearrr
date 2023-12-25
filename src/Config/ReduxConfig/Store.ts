@@ -6,11 +6,7 @@ import { authReducer } from '~/ReduxSaga/Auth'
 import { commonReducer } from '~/ReduxSaga/Common'
 import { HRReducer } from '~/ReduxSaga/HR'
 import { CandidateReducer } from '~/ReduxSaga/Candidate'
-import { postsReducer } from '~/ReduxSaga/Posts'
 import { dashboardReducer } from '~/ReduxSaga/Dashboard'
-import { advReducer } from '~/ReduxSaga/Adv'
-import { newsReducer } from '~/ReduxSaga/News'
-import { SettingPricesReducer } from '~/ReduxSaga/SettingPrices'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -20,11 +16,7 @@ const reducers = {
   common: commonReducer,
   hr: HRReducer,
   candidate: CandidateReducer,
-  posts: postsReducer,
   dashboard: dashboardReducer,
-  adv: advReducer,
-  news: newsReducer,
-  setting_prices: SettingPricesReducer
 }
 
 const logger = createLogger({

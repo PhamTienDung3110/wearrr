@@ -89,7 +89,7 @@ function Sidebar() {
           </Item>
         </Link>
 
-        <Link to={'/employer'}>
+        <Link to={'/product'}>
           <Item isActive={isActive === 2} onClick={() => handleActiveSidebar(2)}>
             <FlexBoxSpaceBetween>
               {/* {isActive === 2 ? <MenuIconActive /> : <MenuIcon />} */}

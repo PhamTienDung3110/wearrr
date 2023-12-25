@@ -13,7 +13,7 @@ export interface HRState {
 const initialState: HRState = {
   dataSubmitBefore: {},
   detailHR: {},
-  listHR: {},
+  listHR: [],
   listPost: {},
   listHistory: {}
 }
@@ -82,27 +82,14 @@ const HRRedux = createSlice({
     ListHistoryHRSuccess: (state, action) => {
       state.listHistory = action.payload
     },
-    BlockUserHRRequest: (state, action) => {
-      state.dataSubmitBefore.blockUserRequest = action.payload
+    DelProductRequest: (state, action) => {
+      state.dataSubmitBefore.delProductRequest = action.payload
     },
-    BlockUserHRFailed: () => {
+    DelProductFailed: () => {
       toast.error('Gọi api lỗi')
     },
-    BlockUserHRSuccess: (state, action) => {
-      if (action.payload.status === 'ACTIVE') {
-        toast.success('Khóa tài khoản thành công')
-      } else {
-        toast.success('Mở khóa tài khoản thành công')
-      }
-
-      if (action.payload.fromScreen === 'list') {
-        const tempListHRItems: any = JSON.parse(JSON.stringify(state?.listHR))
-        const index = tempListHRItems?.items.findIndex((item: any) => item._id === action.payload.data._id)
-        tempListHRItems.items[index] = action.payload.data
-        state.listHR = tempListHRItems
-      } else {
-        state.detailHR = action.payload.data
-      }
+    DelProductSuccess: (state, action) => {
+      toast.success('Xóa tài khoản thành công')
     },
     TopHRRequest: (state, action) => {
       state.dataSubmitBefore.topRequest = action.payload

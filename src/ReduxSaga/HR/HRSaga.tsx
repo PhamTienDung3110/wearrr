@@ -14,7 +14,7 @@ export function* watchHRSaga() {
     takeLatest(HRReduxActions.DetailHRRequest.type, getDetailHR),
     takeLatest(HRReduxActions.ListPostHRRequest.type, getListPostHR),
     takeLatest(HRReduxActions.ListHistoryHRRequest.type, getListHistoryHR),
-    takeLatest(HRReduxActions.BlockUserHRRequest.type, blockUserHR),
+    takeLatest(HRReduxActions.DelProductRequest.type, deleteUser),
     takeLatest(HRReduxActions.TopHRRequest.type, setAndRemoveTopHR)
   ])
 }
@@ -22,10 +22,12 @@ export function* watchHRSaga() {
 function* getListEmployer(action: PayloadAction<any>): any {
   globalLoading.show()
   try {
-    const { type, page, searchParams } = action.payload
-    const api = () => client.get(`${url.development}/${Endpoint.LIST_DATA}`, { type, page, ...searchParams })
+    const { page } = action.payload
+    const api = () => client.get(`${url.development}/${Endpoint.LIST_DATA}`, { page })
     const response = yield call(api)
+    console.log('re', response)
     if (isSuccessResponse(response)) {
+      console.log('re 2', response)
       yield put(HRReduxActions.HRSuccess(response.data.data))
     } else {
       yield put(HRReduxActions.HRFailed())
@@ -110,22 +112,18 @@ function* getListHistoryHR(action: PayloadAction<any>): any {
   globalLoading.hide()
 }
 
-function* blockUserHR(action: PayloadAction<any>): any {
+function* deleteUser(action: PayloadAction<any>): any {
   globalLoading.show()
   try {
-    const { userObjId, status, fromScreen } = action.payload
+    const { id, status, fromScreen } = action.payload
     console.log('status', status)
-    const api = () =>
-      client.put(
-        `${url.development}/${status === 'ACTIVE' ? Endpoint.BLOCK_USER : Endpoint.UNLOCK_USER}`,
-        { userObjId },
-        ''
-      )
+    const api = () => client.delete(`${url.development}/${Endpoint.DELETE_PRODUCT}/${id}`,'')
     const response = yield call(api)
     if (isSuccessResponse(response)) {
-      yield put(HRReduxActions.BlockUserHRSuccess({ data: response.data.data, fromScreen: fromScreen, status: status }))
+      yield put(HRReduxActions.DelProductSuccess({ data: response.data.data, fromScreen: fromScreen, status: status }))
+      yield put(HRReduxActions.HRRequest({}))
     } else {
-      yield put(HRReduxActions.BlockUserHRFailed())
+      yield put(HRReduxActions.DelProductFailed())
       // wrongPasswordOrUsername(response.data.message)
     }
   } catch (error) {

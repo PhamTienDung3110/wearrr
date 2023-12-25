@@ -8,18 +8,15 @@ import CustomDialog from '~/Components/CustomDialog/CustomDialog'
 import CustomTable from '~/Components/CustomTable/CustomTable'
 import CustomText, { TEXT_TYPE } from '~/Components/CustomText'
 import { typeInputComponent, typeTextInput } from '~/Components/FormInput/helper'
-import { FlexBoxAlignCenter, FlexBoxEnd, FlexBoxSpaceBetween } from '~/Components/StyleComponents'
+import { FlexBoxEnd, FlexBoxSpaceBetween } from '~/Components/StyleComponents'
 import { RootState } from '~/Config/ReduxConfig/Store'
 import { useAppDispatch, useAppSelector } from '~/Hooks/useAppSelector'
 import { CommonReduxActions } from '~/ReduxSaga/Common/CommonRedux'
 import { HRReduxActions } from '~/ReduxSaga/HR/HRRedux'
-import { findLabelByValueInOptions } from '~/Utils'
-import AccountColumn from './components/AccountColumn'
 import ActionColumn from './components/ActionColumn'
-import { dataKeys, listStatus, styleHeader, tableHeader } from './config'
+import { dataKeys, styleHeader, tableHeader } from './config'
 import { EMPLOYER_FIELD_NAME } from './fieldName'
 import { SearchEmployerSchema, rechargeSchema } from './schema'
-import { Colors, Images } from '~/Themes'
 function Employer() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -32,9 +29,10 @@ function Employer() {
   const handleCloseDialog = () => {
     setOpenDialog(false)
   }
+  console.log('ssss', listHR)
 
   const CustomDialogContent = () => {
-    const userData = listHR?.items.find((ele: any) => ele._id === currentUserClick)
+    const userData = listHR?.find((ele: any) => ele.id === currentUserClick)
     const {
       control,
       handleSubmit,
@@ -62,32 +60,38 @@ function Employer() {
         <div>
           <FormInput
             control={control}
-            disabled
             type={typeInputComponent.InputText}
             name={EMPLOYER_FIELD_NAME.EMPLOYER}
-            label={'Nhà tuyển dụng'}
-            value={userData.fullName}
+            label={'Tên'}
             errorMessage={errors[EMPLOYER_FIELD_NAME.EMPLOYER]?.message || ''}
-            sx={{ marginBottom: '40px' }}
+            sx={{ marginBottom: '15px' }}
           />
           <FormInput
             control={control}
-            disabled
             type={typeInputComponent.InputText}
-            value={userData.phoneNumber}
             name={EMPLOYER_FIELD_NAME.PHONE_NUMBER}
-            label={'Số điện thoại'}
+            label={'Miêu tả'}
             errorMessage={errors[EMPLOYER_FIELD_NAME.PHONE_NUMBER]?.message || ''}
-            sx={{ marginBottom: '40px' }}
+            sx={{ marginBottom: '15px' }}
           />
           <FormInput
             control={control}
             type={typeInputComponent.InputText}
             typeInput={typeTextInput.decimal}
             name={EMPLOYER_FIELD_NAME.RECHARGE}
-            label={'Số tiền cần nạp'}
-            placeholder={'Nhập số tiền cần nạp'}
+            label={'Giá'}
+            placeholder={'Nhập giá tiền'}
             errorMessage={errors[EMPLOYER_FIELD_NAME.RECHARGE]?.message || ''}
+            sx={{ marginBottom: '20px' }}
+          />
+          <FormInput
+            control={control}
+            type={typeInputComponent.InputText}
+            typeInput={typeTextInput.decimal}
+            name={'quantity'}
+            label={'Số lượng'}
+            placeholder={'Nhập số lượng'}
+            errorMessage={errors['quantity']?.message || ''}
             sx={{ marginBottom: '20px' }}
           />
         </div>
@@ -117,35 +121,23 @@ function Employer() {
 
   const dataTable = useMemo(() => {
     const tempListHR = new Array(listHR?.length).fill({})
-    listHR?.items?.forEach((ele: any, index: number) => {
+    listHR?.forEach((ele: any, index: number) => {
       tempListHR[index] = {
         id: (
-          <div onClick={() => navigate(`/employer/detail/${ele._id}`)}>
+          <div onClick={() => navigate(`/product/detail/${ele.id}`)}>
             <CustomText type={TEXT_TYPE.primary_16_400} customStyle={{ textDecoration: 'underline' }}>
-              {ele._id}
+              {ele.id}
             </CustomText>
           </div>
         ),
-        employer: <img width={100} src='//bizweb.dktcdn.net/thumb/medium/100/347/923/products/a06436c-6.jpg?v=1702022458210' />,
-        phone: ele.phoneNumber,
-        account: (
-          <AccountColumn
-            fund={ele.availableFund}
-            id={ele._id}
-            setOpenDialog={setOpenDialog}
-            setCurrentUserClick={setCurrentUserClick}
-          />
-        ),
-        workNumber: 'API rỗng',
-        status: (
-          <FlexBoxAlignCenter>
-            {findLabelByValueInOptions(listStatus, ele.status, 'value', 'label')}
-            {ele?.isTopHr == 'Yes' && <img width={30} src={Images.iconTopHR} style={{ marginLeft: 10 }} />}
-          </FlexBoxAlignCenter>
-        ),
+        img: <img width={100} src={ele.img} />,
+        name: ele.name,
+        price: ele.price + ' VNĐ',
+        desc: ele.desc,
+        status: ele.status,
         action: (
           <ActionColumn
-            id={ele._id}
+            id={ele.id}
             isTopHr={ele?.isTopHr == 'Yes' ? true : false}
             status={ele.status}
             setOpenDialog={setOpenDialog}
@@ -154,7 +146,6 @@ function Employer() {
         )
       }
     })
-    console.log('tempListHRtempListHRtempListHR', tempListHR)
     return tempListHR
   }, [listHR])
 
@@ -207,6 +198,7 @@ function Employer() {
           />
           <CustomBtn width={'170px'} onClick={handleSubmit(onSubmit)} text={'Tìm kiếm'} />
         </FlexBoxEnd>
+          <CustomBtn width={'170px'} onClick={() => setOpenDialog(true)} text={'Thêm mới'} />
       </FlexBoxSpaceBetween>
       <CustomTable
         data={dataTable}
@@ -219,7 +211,7 @@ function Employer() {
       <CustomDialog
         open={openDialog}
         onClose={handleCloseDialog}
-        title='Nạp tiền'
+        title='Thêm mới sản phẩm'
         content={<CustomDialogContent />}
         hideSubmitBtn
         hideCancelBtn

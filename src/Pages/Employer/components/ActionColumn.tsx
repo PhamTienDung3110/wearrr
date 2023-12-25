@@ -20,7 +20,6 @@ function ActionColumn({ id, status, isTopHr, setOpenDialog, setCurrentUserClick 
   const dispatch = useAppDispatch()
 
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null)
-  const [openTopHrDialog, setOpenTopHrDialog] = useState(false)
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setPopoverAnchor(event.currentTarget)
@@ -29,19 +28,15 @@ function ActionColumn({ id, status, isTopHr, setOpenDialog, setCurrentUserClick 
   const handlePopoverClose = () => {
     setPopoverAnchor(null)
   }
-  const handleTopHr = () => {
-    dispatch(HRReduxActions.TopHRRequest({ userObjId: id, isTopHR: isTopHr, fromScreen: 'list' }))
-    setOpenTopHrDialog(false)
-  }
   const [openDialogBlockUser, setOpenDialogBlockUser] = useState(false)
 
-  const handleCloseDialogBlockUser = () => {
+  const handleCloseDelProduct = () => {
     setOpenDialogBlockUser(false)
   }
 
-  const handleConfirmBlock = () => {
-    dispatch(HRReduxActions.BlockUserHRRequest({ userObjId: id, status: status, fromScreen: 'list' }))
-    handleCloseDialogBlockUser()
+  const handleConfirmDelete = () => {
+    dispatch(HRReduxActions.DelProductRequest({ id: id, status: status, fromScreen: 'list' }))
+    handleCloseDelProduct()
   }
 
   const open = Boolean(popoverAnchor)
@@ -76,51 +71,18 @@ function ActionColumn({ id, status, isTopHr, setOpenDialog, setCurrentUserClick 
               Xem chi tiết
             </ImgContainer>
             <ImgContainer onClick={() => setOpenDialogBlockUser(true)}>
-              <ImgIcon src={status === 'ACTIVE' ? Images.blockUserIcon : Images.unlockUserIcon} alt='#' />
-              {status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa'}
-            </ImgContainer>
-            <ImgContainer
-              onClick={() => {
-                setCurrentUserClick(id)
-                setOpenDialog(true)
-              }}
-            >
-              <ImgIcon src={Images.depositIcon} alt='#' />
-              Nạp tiền
-            </ImgContainer>
-            <ImgContainer
-              onClick={() => {
-                setCurrentUserClick(id)
-                setOpenTopHrDialog(true)
-              }}
-            >
-              <ImgIcon src={isTopHr ? Images.removeTop : Images.addTop} alt='#' />
-              {isTopHr ? 'Bỏ top' : 'TOP Trang chủ'}
+              <ImgIcon src={Images.deleteIcon} alt='#' />
+              Xóa sản phẩm
             </ImgContainer>
           </div>
         </Typography>
       </Popover>
       <CustomDialog
         open={openDialogBlockUser}
-        onClose={handleCloseDialogBlockUser}
-        onConfirm={handleConfirmBlock}
-        title={status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
-        content={
-          status === 'ACTIVE'
-            ? 'Bạn có chắc chắn muốn khóa tài khoản này không?'
-            : 'Bạn có chắc chắn muốn mở khóa tài khoản này không?'
-        }
-      />
-      <CustomDialog
-        open={openTopHrDialog}
-        title={isTopHr ? 'TOP Trang chủ' : 'Bỏ TOP Trang chủ'}
-        content={
-          isTopHr
-            ? 'Bạn có chắc chắn muốn bỏ TOP trang chủ không?'
-            : 'Bạn có chắc chắn muốn để tài khoản này ở TOP trang chủ không?'
-        }
-        onClose={() => setOpenTopHrDialog(false)}
-        onConfirm={handleTopHr}
+        onClose={handleCloseDelProduct}
+        onConfirm={handleConfirmDelete}
+        title={'Xóa sản phẩm'}
+        content={'Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này không?'}
       />
     </div>
   )

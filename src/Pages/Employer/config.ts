@@ -2,11 +2,12 @@ export const tableHeader = [
   'ID',
   'Hình ảnh chính',
   'Tên sản phẩm',
+  'giá',
   'miêu tả',
   'Số lượng',
   'Thao tác'
 ]
-export const dataKeys = ['id', 'employer', 'phone', 'account', 'status', 'action']
+export const dataKeys = ['id', 'img', 'name', 'price','desc', 'status', 'action']
 
 export const styleHeader = [
   { minWidth: '' },

@@ -5,14 +5,14 @@ export const url = {
 export const Endpoint = {
   // admin
   LOGIN_ADMIN: 'auth/admin/login',
-  LIST_DATA: 'auth/users/list',
+  LIST_DATA: 'admin/product',
   DETAIL_USER: 'auth/users/info',
   FW_INPUT_EMAIL: 'forgot',
   FW_INPUT_OTP: 'verifyCode',
   FW_CHANGE_PASSWORD: 'resetPassword',
   RECHARGE_USER: 'auth/users/chargeMoney',
   LIST_POST_HR: 'auth/posts/list',
-  BLOCK_USER: 'auth/users/lockUser',
+  DELETE_PRODUCT: 'admin/product',
   UNLOCK_USER: 'auth/users/unlockUser',
   LIST_HISTORY_HR: 'auth/charging-histories/listByUser',
   LIST_POSTS: 'auth/posts/list',
